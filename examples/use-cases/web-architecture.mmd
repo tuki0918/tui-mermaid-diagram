@@ -1,0 +1,49 @@
+---
+title: SHOP API  ·  system architecture
+---
+block-beta
+    accDescr: All traffic enters through the CDN and the load balancer.<br>Only the API servers can reach the database; workers pick up slow jobs from the queue.
+    columns 4
+
+    block:clients["CLIENTS"]
+        columns 1
+        web("WEB APP<br>Next.js<br>*served from the CDN*")
+        mobile("MOBILE APP<br>iOS / Android")
+    end
+    block:edge["EDGE"]
+        columns 1
+        cdn["CDN<br>static assets, cache<br>*TLS termination*"]
+        lb["LOAD BALANCER<br>health checks<br>*round robin*"]
+    end
+    block:app["APPLICATION"]
+        columns 1
+        api["API SERVER<br># x3 instances<br>auth, orders, catalog<br>*port 8080*"]
+        worker[["WORKER<br>emails, invoices<br>image resizing"]]
+    end
+
+    block:data["DATA  (private subnet)"]
+        columns 1
+        db[("POSTGRES<br>orders, users<br>*primary + replica*")]
+        cache[("REDIS<br>sessions, cache")]
+        queue[("QUEUE<br>SQS<br>*jobs*")]
+    end
+
+    web -->|HTTPS| cdn
+    mobile -->|HTTPS| lb
+    cdn -->|/api/*| lb
+    lb --> api
+    api -->|SQL| db
+    api -->|get / set| cache
+    api -->|enqueue| queue
+    queue -->|poll| worker
+
+    style clients stroke:#7fd8e8
+    style edge stroke:#b9a0f0
+    style app stroke:#7fd99a
+    style data stroke:#e8c86e
+    style web stroke:#7fd8e8
+    style mobile stroke:#7fd8e8
+    style cdn stroke:#b9a0f0
+    style lb stroke:#b9a0f0
+    style api stroke:#7fd99a
+    style worker stroke:#7fd99a

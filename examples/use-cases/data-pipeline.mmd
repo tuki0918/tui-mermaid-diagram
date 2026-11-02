@@ -1,0 +1,33 @@
+---
+title: NIGHTLY ANALYTICS PIPELINE
+---
+flowchart LR
+    subgraph sources [SOURCES]
+        app[("APP DB<br>Postgres")]
+        events[("EVENTS<br>clickstream logs")]
+        crm("CRM<br>REST API")
+    end
+
+    subgraph etl [ETL  (Airflow, 02:00 daily)]
+        extract["EXTRACT<br>incremental by<br>updated_at"]
+        transform["TRANSFORM<br>dbt models<br>*dedupe, join, aggregate*"]
+        check{"Tests pass?"}
+    end
+
+    subgraph serve [SERVE]
+        dwh[("WAREHOUSE<br>BigQuery")]
+        bi("DASHBOARD<br>Looker Studio")
+    end
+
+    app & events & crm --> extract
+    extract -->|raw tables| transform
+    transform --> check
+    check ==>|yes| dwh
+    check -.->|no| alert[Slack alert]
+    dwh --> bi
+
+    style sources stroke:#7fd8e8
+    style etl stroke:#b9a0f0
+    style serve stroke:#7fd99a
+    classDef danger stroke:#f08080
+    class alert danger

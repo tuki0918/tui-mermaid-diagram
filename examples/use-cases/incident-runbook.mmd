@@ -1,0 +1,18 @@
+---
+title: INCIDENT TRIAGE  ·  first response
+---
+flowchart TD
+    accDescr: When in doubt, escalate.
+    alert([Alert fires]) --> ack["Acknowledge<br>post in #incident"]
+    ack --> impact{"Users affected?"}
+    impact -->|no| ticket[["Open a ticket<br>*handle next business day*"]]
+    impact -->|yes| deploy{"Deploy in the last hour?"}
+    deploy -->|yes| rollback["Roll back<br>✓ restore previous version"]
+    deploy -->|no| infra{"Infrastructure issue?"}
+    infra -->|yes| sre["Escalate to SRE<br>**page the on-call**"]
+    infra -->|no| owner["Contact the owning team"]
+    rollback & sre & owner --> status["Update the status page"]
+    status --> postmortem([Postmortem])
+
+    classDef danger stroke:#f08080
+    class sre danger

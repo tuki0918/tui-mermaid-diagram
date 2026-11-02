@@ -1,0 +1,15 @@
+flowchart TD
+    Start([Visit online store]) --> Browse[Browse products]
+    Browse --> Cart[Add items to cart]
+    Cart --> Decide{Ready to check out?}
+    Decide -->|Keep shopping| Browse
+    Decide -->|Yes| Pay[Enter payment details]
+    Pay --> Valid{Payment accepted?}
+    Valid -->|No| Retry[Show error message]
+    Retry --> Pay
+    Valid -->|Yes| Confirm[Order confirmed]
+    Confirm --> Done([Email receipt])
+
+    style Start fill:#e8f5e9,stroke:#43a047
+    style Done fill:#e8f5e9,stroke:#43a047
+    style Valid fill:#fff3e0,stroke:#fb8c00

@@ -1,0 +1,12 @@
+flowchart LR
+    push([git push]) --> lint[Lint] & test[Unit tests] & build[Build]
+    lint --> gate{All green?}
+    test --> gate
+    build --> image[(Docker image)]
+    image --> gate
+    gate -->|yes| deploy[[Deploy to staging]]
+    gate -->|no| notify[Notify author]
+    deploy --> smoke[Smoke tests] --> prod([Production])
+    smoke -.->|fail| rollback[Rollback]
+    classDef danger stroke:#f08080
+    class notify,rollback danger

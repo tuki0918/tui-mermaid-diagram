@@ -1,0 +1,19 @@
+---
+title: SIGN-IN FLOW
+---
+flowchart TD
+    accDescr: Five failed attempts lock the account for 15 minutes.
+    start([Sign-in form]) --> creds{"Password OK?"}
+    creds -->|no| fail["FAILED ATTEMPT<br>count + 1"]
+    fail --> locked{"5 failures?"}
+    locked -->|no| start
+    locked -->|yes| lock["ACCOUNT LOCKED<br>✕ sign-in disabled<br>*unlocks after 15 min*"]
+    creds -->|yes| mfa{"MFA enabled?"}
+    mfa -->|yes| otp[["ONE-TIME CODE<br>authenticator app"]]
+    otp -->|valid| session
+    otp -.->|invalid| fail
+    mfa -->|no| session["CREATE SESSION<br>✓ HttpOnly cookie<br>✓ CSRF token"]
+    session --> home([Dashboard])
+
+    classDef danger stroke:#f08080
+    class fail,lock danger

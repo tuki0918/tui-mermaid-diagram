@@ -1,0 +1,44 @@
+{
+  "name": "tui-mermaid-diagram",
+  "version": "0.1.0",
+  "description": "Render Mermaid flowcharts as colored terminal (TUI-style) box drawings",
+  "keywords": [
+    "mermaid",
+    "flowchart",
+    "diagram",
+    "terminal",
+    "tui",
+    "cli",
+    "ascii",
+    "box-drawing",
+    "block-beta",
+    "svg"
+  ],
+  "homepage": "https://github.com/tuki0918/tui-mermaid-diagram#readme",
+  "bugs": {
+    "url": "https://github.com/tuki0918/tui-mermaid-diagram/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tuki0918/tui-mermaid-diagram.git"
+  },
+  "license": "MIT",
+  "author": "tuki0918",
+  "type": "module",
+  "bin": {
+    "tui-mermaid": "bin/tui-mermaid.mjs"
+  },
+  "exports": "./src/index.mjs",
+  "files": [
+    "bin",
+    "src"
+  ],
+  "scripts": {
+    "test": "node --test",
+    "examples": "node bin/tui-mermaid.mjs examples/use-cases/*.mmd examples/mermaid-docs/*.mmd",
+    "prepublishOnly": "npm test"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
